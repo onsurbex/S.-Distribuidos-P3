@@ -5,28 +5,70 @@
  */
 package centralizedgroups;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 /**
  *
  * @author onsur
  */
-public class GroupServer implements GroupServerInterface {
+public class GroupServer extends UnicastRemoteObject implements GroupServerInterface{
 
+    LinkedList<ObjectGroup> groupList;
+    int id = 0;
+    ReentrantLock lock;
+    
+    GroupServer() throws RemoteException {
+        
+    }
+    
+    
     @Override
-    public int createGroup(String groupAlias, String ownerAlias, String ownerHostname) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int createGroup(String groupAlias, String ownerAlias, String hostname) {
+        this.lock.lock();
+        try {
+            if(findGroup(groupAlias) == -1){
+                ObjectGroup group = new ObjectGroup(groupAlias,id,ownerAlias,hostname);
+                groupList.add(group);
+                id++;
+                return group.groupID;
+            } else {
+                return -1;
+            }
+        } finally {
+            this.lock.unlock();
+        }
     }
 
     @Override
     public int findGroup(String groupAlias) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.lock.lock();
+        try {
+            for (ObjectGroup group : groupList) {
+                if(group.groupAlias.equals(groupAlias))
+                    return group.groupID;
+            }
+            return -1;
+        } finally {
+            this.lock.unlock();
+        }
     }
 
     @Override
     public String findGroup(int groupID) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.lock.lock();
+        try {
+            for (ObjectGroup group : groupList) {
+                if(group.groupID == groupID)
+                    return group.groupAlias;
+            }
+            return null;
+        } finally {
+            this.lock.unlock();
+        }
     }
 
     @Override

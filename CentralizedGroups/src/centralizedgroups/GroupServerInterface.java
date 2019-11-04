@@ -5,13 +5,14 @@
  */
 package centralizedgroups;
 
+import java.rmi.Remote;
 import java.util.LinkedList;
 
 /**
  *
  * @author onsur
  */
-public interface GroupServerInterface {
+public interface GroupServerInterface extends Remote{
     
     /**
      * 
@@ -21,25 +22,25 @@ public interface GroupServerInterface {
      * @return  n>=0 - Group identifier integer greater or equal than 0
      *            -1 - Error  
      */
-    int createGroup(String groupAlias,String ownerAlias, String ownerHostname);
+    public int createGroup(String groupAlias,String ownerAlias, String ownerHostname);
     
-    int findGroup(String groupAlias);
+    public int findGroup(String groupAlias);
     
-    String findGroup(int groupID);
+    public String findGroup(int groupID);
     
-    boolean removeGroup(String groupAlias, String ownerAlias);
+    public boolean removeGroup(String groupAlias, String ownerAlias);
     
-    GroupMember addMember(String groupAlias, String alias, String hostname);
+    public GroupMember addMember(String groupAlias, String alias, String hostname);
     
-    boolean removeMember(String groupAlias, String alias);
+    public boolean removeMember(String groupAlias, String alias);
     
-    GroupMember isMember(String groupAlias, String alias);
+    public GroupMember isMember(String groupAlias, String alias);
     
-    boolean StopMembers(String groupAlias);
+    public boolean StopMembers(String groupAlias);
     
-    boolean AllowMembers(String groupAlias);
+    public boolean AllowMembers(String groupAlias);
     
-    LinkedList<String> ListMembers(String groupAlias);
+    public LinkedList<String> ListMembers(String groupAlias);
     
-    LinkedList<String> ListGroup();
+    public LinkedList<String> ListGroup();
 }
