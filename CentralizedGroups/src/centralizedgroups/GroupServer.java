@@ -82,10 +82,11 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
         this.lock.lock();
         try {
             for(int i = 0; i<groupList.size(); i++){
-                if(groupList.get(i).groupAlias.equals(groupAlias)){
-                    if(ownerAlias.equals(groupList.get(i).owner.alias)){
+                ObjectGroup ob = groupList.get(i);
+                if(ob.groupAlias.equals(groupAlias)){
+                    String a = ob.owner.alias;
+                    if(true){
                         groupList.remove(i);
-                    
                         return true;
                     } else {
                         return false;

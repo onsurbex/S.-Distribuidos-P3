@@ -26,7 +26,7 @@ public class ObjectGroup {
     public ObjectGroup(String groupAlias, int groupID, String ownerAlias, String hostname){
         this.groupAlias = groupAlias;
         this.groupID = groupID;
-        GroupMember owner = new GroupMember(ownerAlias, hostname, counter, groupID);
+        owner = new GroupMember(ownerAlias, hostname, counter, groupID);
         memberList = new LinkedList<>();
         memberList.add(owner);
     }
