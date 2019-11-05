@@ -5,10 +5,13 @@
  */
 package centralizedgroups;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  *
  * @author onsur
  */
 public interface ClientInterface {
-    
+
 }

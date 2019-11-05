@@ -96,6 +96,7 @@ public class ObjectGroup {
         this.lock.lock();
         try {
             this.locked = false;
+            condition.signalAll();
         } finally {
             this.lock.unlock();
         }

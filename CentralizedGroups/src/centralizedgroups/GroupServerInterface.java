@@ -6,6 +6,7 @@
 package centralizedgroups;
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.LinkedList;
 
 /**
@@ -22,25 +23,25 @@ public interface GroupServerInterface extends Remote{
      * @return  n>=0 - Group identifier integer greater or equal than 0
      *            -1 - Error  
      */
-    public int createGroup(String groupAlias,String ownerAlias, String ownerHostname);
+    public int createGroup(String groupAlias,String ownerAlias, String ownerHostname) throws RemoteException;
     
-    public int findGroup(String groupAlias);
+    public int findGroup(String groupAlias) throws RemoteException;
     
-    public String findGroup(int groupID);
+    public String findGroup(int groupID) throws RemoteException;
     
-    public boolean removeGroup(String groupAlias, String ownerAlias);
+    public boolean removeGroup(String groupAlias, String ownerAlias) throws RemoteException;
     
-    public GroupMember addMember(String groupAlias, String alias, String hostname);
+    public GroupMember addMember(String groupAlias, String alias, String hostname) throws RemoteException;
     
-    public boolean removeMember(String groupAlias, String alias);
+    public boolean removeMember(String groupAlias, String alias) throws RemoteException;
     
-    public GroupMember isMember(String groupAlias, String alias);
+    public GroupMember isMember(String groupAlias, String alias) throws RemoteException;
     
-    public boolean StopMembers(String groupAlias);
+    public boolean StopMembers(String groupAlias) throws RemoteException;
     
-    public boolean AllowMembers(String groupAlias);
+    public boolean AllowMembers(String groupAlias) throws RemoteException;
     
-    public LinkedList<String> ListMembers(String groupAlias);
+    public LinkedList<String> ListMembers(String groupAlias) throws RemoteException;
     
-    public LinkedList<String> ListGroup();
+    public LinkedList<String> ListGroup() throws RemoteException;
 }

@@ -88,6 +88,7 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                 continue;
             } else {
                 String alias;
+                try {
                 switch(option){
                     
                     case (1):
@@ -166,6 +167,9 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                         System.out.println("Cerrando cliente");
                         System.exit(0);
                         break;
+                }
+                } catch (RemoteException e) {
+                    System.err.println("Excepcion Remota: " + e.toString());
                 }
             }
         }
