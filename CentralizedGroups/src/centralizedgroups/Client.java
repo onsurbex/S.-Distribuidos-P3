@@ -154,8 +154,8 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                         groupAlias = s.nextLine();
                         if(server.findGroup(groupAlias) != -1){
                             namelist = server.ListMembers(groupAlias);
-                            for (String string : namelist) {
-                                System.out.println(string);
+                            for (int i = 0; i<namelist.size(); i++) {
+                                System.out.println((i+1)+": "+namelist.get(i));
                             }
                         } else {
                             System.out.println("Ese grupo no existe!");
