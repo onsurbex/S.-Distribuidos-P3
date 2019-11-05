@@ -258,13 +258,17 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
     
     public static void main(String[] args){
         System.setProperty("java.security.policy", "C:\\Users\\onsur\\Documents\\NetBeansProjects\\S.-Distribuidos-P3\\CentralizedGroups\\policy");
-        System.setSecurityManager(new SecurityManager());
+        if(System.getSecurityManager() == null) {
+            System.setSecurityManager(new SecurityManager());
+        }
+        
         try {
             LocateRegistry.createRegistry(1099);  
             GroupServer groupServer = new GroupServer();
             Naming.rebind("GroupServer", groupServer);
-        } catch (RemoteException | MalformedURLException ex) {
-            Logger.getLogger(GroupServer.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            System.err.println("Server exception: " + ex.toString());
+            ex.printStackTrace();
         }
     }
 }
