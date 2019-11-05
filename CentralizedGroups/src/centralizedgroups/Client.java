@@ -82,8 +82,13 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
             System.out.println(" 8. Mostrar grupos actuales");
             System.out.println(" 9. Salir");
             System.out.print("Opcion [1-9]: ");
-            option = s.nextInt();
-            s.nextLine();
+            try {
+                option = s.nextInt();
+                s.nextLine();
+            } catch (Exception e){
+                System.err.println(e);
+                option = 9;
+            }
             System.out.println();
             if(option <= 0 || option > 9){
                 System.out.println("Opcion no valida: Numero no recogido en las opciones");
@@ -169,7 +174,6 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                         }
                         break;
                     case (9):
-                        System.out.println(server);
                         System.out.println("Cerrando cliente");
                         System.exit(0);
                         break;
