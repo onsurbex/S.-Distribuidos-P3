@@ -67,11 +67,11 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
         LinkedList<String> namelist;
         int option = 0;
         Scanner s = new Scanner(System.in);
-        
+        System.out.println("Bienvenido al cliente de Grupos");
+        System.out.println("Estas son las opciones que dispone");
+        System.out.println("Eliga una: ");
         while(option != 9){
-            System.out.println("Bienvenido al cliente de Grupos");
-            System.out.println("Estas son las opciones que dispone");
-            System.out.println("Eliga una: ");
+            System.out.println("----------------");
             System.out.println(" 1. Crear grupo");
             System.out.println(" 2. Eliminar grupo");
             System.out.println(" 3. Añadir miembro al grupo");
@@ -87,7 +87,6 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
             s.nextLine();
             if(option <= 0 || option > 9){
                 System.out.println("Opcion no valida: Numero no recogido en las opciones");
-                continue;
             } else {
                 String alias;
                 try {
