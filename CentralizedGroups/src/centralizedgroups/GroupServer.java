@@ -82,9 +82,14 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
         try {
             for(int i = 0; i<groupList.size(); i++){
                 if(groupList.get(i).groupAlias.equals(groupAlias)){
-                    groupList.remove(i);
-                    this.lock.unlock();
-                    return true;
+                    if(ownerAlias.equals(groupList.get(i).owner.alias)){
+                        groupList.remove(i);
+                    
+                        return true;
+                    } else {
+                        return false;
+                    }
+                    
                 }
             }
             return false;
@@ -192,9 +197,9 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
             if(ob.groupAlias.equals(groupAlias)){
                 ob.StopMembers();
                 return true;
+                }
             }
-        }
-        return false;
+          return false;
         } finally {
             this.lock.unlock();
         }
@@ -208,9 +213,9 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
             if(ob.groupAlias.equals(groupAlias)){
                 ob.AllowMembers();
                 return true;
+                }
             }
-        }
-        return false;
+            return false;
         } finally {
             this.lock.unlock();
         }
