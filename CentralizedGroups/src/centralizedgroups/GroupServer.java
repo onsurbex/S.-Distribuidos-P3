@@ -32,7 +32,7 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
     
     
     @Override
-    public int createGroup(String groupAlias, String ownerAlias, String hostname) {
+    public int createGroup(String groupAlias, String ownerAlias, String hostname) throws RemoteException{
         this.lock.lock();
         try {
             if(findGroup(groupAlias) == -1){
@@ -49,7 +49,7 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
     }
 
     @Override
-    public int findGroup(String groupAlias) {
+    public int findGroup(String groupAlias) throws RemoteException{
         this.lock.lock();
         try {
             for (ObjectGroup group : groupList) {
@@ -63,7 +63,7 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
     }
 
     @Override
-    public String findGroup(int groupID) {
+    public String findGroup(int groupID) throws RemoteException{
         this.lock.lock();
         try {
             for (ObjectGroup group : groupList) {
@@ -77,7 +77,7 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
     }
 
     @Override
-    public boolean removeGroup(String groupAlias, String ownerAlias) {
+    public boolean removeGroup(String groupAlias, String ownerAlias) throws RemoteException{
         this.lock.lock();
         try {
             for(int i = 0; i<groupList.size(); i++){
@@ -87,21 +87,21 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
                     return true;
                 }
             }
+            return false;
         } finally {
             this.lock.unlock();
         }
-        return false;
+        
     }
 
     @Override
-    public GroupMember addMember(String groupAlias, String alias, String hostname) {
+    public GroupMember addMember(String groupAlias, String alias, String hostname)throws RemoteException {
         this.lock.lock();
         try {
             for(ObjectGroup ob : groupList){
                 if(ob.groupAlias.equals(groupAlias)){
                     for(GroupMember gm : ob.memberList){
                         if(gm.alias.equals(alias)){
-                            this.lock.unlock();
                             return null;
                         }
                     }
@@ -111,21 +111,21 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
                         Logger.getLogger(GroupServer.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     for(GroupMember gm : ob.memberList){
-                        if(gm.alias.equals(alias)){
-                            this.lock.unlock();
+                        if(gm.alias.equals(alias)){ 
                             return gm;
                         }
                     }
                 }
             }
+            return null;
         } finally {
             this.lock.unlock();
         }
-        return null;
+        
     }
 
     @Override
-    public boolean removeMember(String groupAlias, String alias) {
+    public boolean removeMember(String groupAlias, String alias) throws RemoteException{
         this.lock.lock();
         try {
             for(ObjectGroup ob : groupList){
@@ -150,15 +150,16 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
                     return false;
                 }
             }
+            return false;
             //group not found
         } finally {
             this.lock.unlock();
         }
-        return false;
+        
     }
 
     @Override
-    public GroupMember isMember(String groupAlias, String alias) {
+    public GroupMember isMember(String groupAlias, String alias) throws RemoteException{
         this.lock.lock();
         try {
             for(ObjectGroup ob: groupList){
@@ -175,15 +176,18 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
                     return null;
                 }
             }
+        return null;
         //group not found
         } finally {
             this.lock.unlock();
         }
-        return null;
+        
     }
 
     @Override
-    public boolean StopMembers(String groupAlias) {
+    public boolean StopMembers(String groupAlias) throws RemoteException{
+        this.lock.lock();
+        try {
         for(ObjectGroup ob: groupList){
             if(ob.groupAlias.equals(groupAlias)){
                 ob.StopMembers();
@@ -191,10 +195,15 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
             }
         }
         return false;
+        } finally {
+            this.lock.unlock();
+        }
     }
 
     @Override
-    public boolean AllowMembers(String groupAlias) {
+    public boolean AllowMembers(String groupAlias) throws RemoteException{
+        this.lock.lock();
+        try{
         for(ObjectGroup ob: groupList){
             if(ob.groupAlias.equals(groupAlias)){
                 ob.AllowMembers();
@@ -202,10 +211,13 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
             }
         }
         return false;
+        } finally {
+            this.lock.unlock();
+        }
     }
 
     @Override
-    public LinkedList<String> ListMembers(String groupAlias) {
+    public LinkedList<String> ListMembers(String groupAlias) throws RemoteException {
         this.lock.lock();
         try {
             for(ObjectGroup ob: groupList){
@@ -217,24 +229,26 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
                     return namelist;
                 }
             }
+            return null;
         } finally {
             this.lock.unlock();
         }
-        return null;
+        
     }
 
     @Override
-    public LinkedList<String> ListGroup() {
+    public LinkedList<String> ListGroup() throws RemoteException{
         this.lock.lock();
         LinkedList<String> namelist = new LinkedList<>();
         try {
             for(ObjectGroup ob: groupList){
                 namelist.add(ob.groupAlias);
             }
+            return namelist;
         } finally {
             this.lock.unlock();
         }
-        return namelist;
+        
     }
     
     public static void main(String[] args){
