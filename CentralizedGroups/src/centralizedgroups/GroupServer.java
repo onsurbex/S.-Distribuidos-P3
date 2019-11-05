@@ -28,6 +28,7 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
     
     GroupServer() throws RemoteException {
         this.lock = new ReentrantLock();
+        this.groupList = new LinkedList<>();
     }
     
     
@@ -52,7 +53,7 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
     public int findGroup(String groupAlias) throws RemoteException{
         this.lock.lock();
         try {
-            for (ObjectGroup group : groupList) {
+            for (ObjectGroup group : this.groupList) {
                 if(group.groupAlias.equals(groupAlias))
                     return group.groupID;
             }
@@ -89,7 +90,6 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
                     } else {
                         return false;
                     }
-                    
                 }
             }
             return false;
@@ -257,7 +257,7 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
     }
     
     public static void main(String[] args){
-        System.setProperty("java.security.policy", "C:\\Users\\onsur\\Documents\\NetBeansProjects\\S.-Distribuidos-P3\\CentralizedGroups\\policy");
+        System.setProperty("java.security.policy", "C:\\Users\\Mariniwa\\Documents\\NetBeansProjects\\S.-Distribuidos-P3\\CentralizedGroups\\policy");
         if(System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
