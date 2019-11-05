@@ -10,5 +10,7 @@ package centralizedgroups;
  * @author onsur
  */
 public class Client {
-    
+    public Client(){
+        System.out.println("algo");
+    }
 }
