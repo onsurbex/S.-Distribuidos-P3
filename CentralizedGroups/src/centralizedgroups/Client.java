@@ -13,6 +13,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,7 +48,7 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
         GroupServerInterface server = null;
         String serverHostname = args[0];
         try{
-            Registry registry = LocateRegistry.getRegistry(serverHostname, 1099);         
+            Registry registry = LocateRegistry.getRegistry(serverHostname, 1099);
             server = (GroupServerInterface) registry.lookup("GroupServer");
         } catch(Exception e){
             System.err.println("Exception: " + e.toString());
@@ -55,9 +56,10 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
         
         
         Client client = new Client();
-       
-        
-        
+        String memberAlias = null;
+        String groupAlias = null;
+        int res; 
+        LinkedList<String> nameList;
         int option = 0;
         Scanner s = new Scanner(System.in);
         
@@ -85,8 +87,8 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                     case (1):
                         
                         System.out.println("Name an alias for the group: ");
-                        String groupAlias = s.nextLine();
-                        int res = server.createGroup(groupAlias, client.clientAlias, client.hostname);
+                        groupAlias = s.nextLine();
+                        res = server.createGroup(groupAlias, client.clientAlias, client.hostname);
                         if(res == -1){
                             System.out.println("ERROR al crear el grupo");
                         } else {
@@ -96,14 +98,36 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                     case (2):
                         break;
                     case (3):
+                        System.out.println("Introduzca alias del grupo: ");
+                        groupAlias = s.nextLine();
+                        
+                        System.out.println("Introduzca alias para el miembro del grupo: ");
+                        memberAlias = s.nextLine();
+                        
+                        if(server.addMember(groupAlias, memberAlias, client.hostname) != null)
+                            System.out.println("Mimbro creado correctamente");
+                        else
+                            System.out.println("Error al crear el miembro");
                         break;
                     case (4):
                         break;
                     case (5):
+                        System.out.println("Introduzca alias del grupo: ");
+                        groupAlias = s.nextLine();
+                        if(server.StopMembers(groupAlias))
+                            System.out.println("Altas y bajas bloqueadas CORRECTAMENTE");
+                        else
+                            System.out.println("ERROR al bloquear las altas/bajas");
                         break;
                     case (6):
                         break;
                     case (7):
+                        System.out.println("Introduzca alias del grupo a mostrar: ");
+                        groupAlias = s.nextLine();
+                        nameList = server.ListMembers(groupAlias);
+                        for (String string : nameList) {
+                            System.out.println(string);
+                        }
                         break;
                     case (8):
                         break;
