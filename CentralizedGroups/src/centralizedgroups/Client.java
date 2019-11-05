@@ -47,6 +47,10 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
         
         GroupServerInterface server = null;
         String serverHostname = args[0];
+        if(serverHostname == null)
+            System.out.println("Falta el hostname como argumanto del programa");
+            System.exit(0);
+            
         try{
             Registry registry = LocateRegistry.getRegistry(serverHostname, 1099);
             server = (GroupServerInterface) registry.lookup("GroupServer");
