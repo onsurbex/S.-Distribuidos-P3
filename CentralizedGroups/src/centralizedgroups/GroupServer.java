@@ -27,7 +27,7 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
     ReentrantLock lock;
     
     GroupServer() throws RemoteException {
-        
+        this.lock = new ReentrantLock();
     }
     
     
@@ -78,42 +78,163 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
 
     @Override
     public boolean removeGroup(String groupAlias, String ownerAlias) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.lock.lock();
+        try {
+            for(int i = 0; i<groupList.size(); i++){
+                if(groupList.get(i).groupAlias.equals(groupAlias)){
+                    groupList.remove(i);
+                    this.lock.unlock();
+                    return true;
+                }
+            }
+        } finally {
+            this.lock.unlock();
+        }
+        return false;
     }
 
     @Override
     public GroupMember addMember(String groupAlias, String alias, String hostname) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.lock.lock();
+        try {
+            for(ObjectGroup ob : groupList){
+                if(ob.groupAlias.equals(groupAlias)){
+                    for(GroupMember gm : ob.memberList){
+                        if(gm.alias.equals(alias)){
+                            this.lock.unlock();
+                            return null;
+                        }
+                    }
+                    try {
+                        ob.addMember(alias, hostname);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(GroupServer.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    for(GroupMember gm : ob.memberList){
+                        if(gm.alias.equals(alias)){
+                            this.lock.unlock();
+                            return gm;
+                        }
+                    }
+                }
+            }
+        } finally {
+            this.lock.unlock();
+        }
+        return null;
     }
 
     @Override
     public boolean removeMember(String groupAlias, String alias) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.lock.lock();
+        try {
+            for(ObjectGroup ob : groupList){
+                if(ob.groupAlias.equals(groupAlias)){
+                    for(int i = 0; i<ob.memberList.size(); i++){
+                        if(ob.memberList.get(i).alias.equals(alias)){
+                            if(ob.owner.alias.equals(alias)){
+                                //cannot remove owner
+                                this.lock.unlock();
+                                return false;
+                            }
+                            else {
+                                //success
+                                ob.memberList.remove(i);
+                                this.lock.unlock();
+                                return true;
+                            }
+                        }
+                    }
+                    //not found in group
+                    this.lock.unlock();
+                    return false;
+                }
+            }
+            //group not found
+        } finally {
+            this.lock.unlock();
+        }
+        return false;
     }
 
     @Override
     public GroupMember isMember(String groupAlias, String alias) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.lock.lock();
+        try {
+            for(ObjectGroup ob: groupList){
+                if(ob.groupAlias.equals(groupAlias)){
+                    //found group
+                    for(GroupMember gm : ob.memberList){
+                        if(gm.alias.equals(alias)){
+                            this.lock.unlock();
+                            return gm;
+                        }
+                    }
+                    //member not found in group
+                    this.lock.unlock();
+                    return null;
+                }
+            }
+        //group not found
+        } finally {
+            this.lock.unlock();
+        }
+        return null;
     }
 
     @Override
     public boolean StopMembers(String groupAlias) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for(ObjectGroup ob: groupList){
+            if(ob.groupAlias.equals(groupAlias)){
+                ob.StopMembers();
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public boolean AllowMembers(String groupAlias) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for(ObjectGroup ob: groupList){
+            if(ob.groupAlias.equals(groupAlias)){
+                ob.AllowMembers();
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public LinkedList<String> ListMembers(String groupAlias) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.lock.lock();
+        try {
+            for(ObjectGroup ob: groupList){
+                if(ob.groupAlias.equals(groupAlias)){
+                    LinkedList<String> namelist = new LinkedList<>();
+                    for(GroupMember gm: ob.memberList){
+                        namelist.add(gm.alias);
+                    }
+                    return namelist;
+                }
+            }
+        } finally {
+            this.lock.unlock();
+        }
+        return null;
     }
 
     @Override
     public LinkedList<String> ListGroup() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.lock.lock();
+        LinkedList<String> namelist = new LinkedList<>();
+        try {
+            for(ObjectGroup ob: groupList){
+                namelist.add(ob.groupAlias);
+            }
+        } finally {
+            this.lock.unlock();
+        }
+        return namelist;
     }
     
     public static void main(String[] args){
