@@ -238,7 +238,7 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
     }
     
     public static void main(String[] args){
-        System.setProperty("java.security.policy", "C:\\Users\\onsur\\Documents\\NetBeansProjects\\S.-Distribuidos-P3\\CentralizedGroups");
+        System.setProperty("java.security.policy", "C:\\Users\\onsur\\Documents\\NetBeansProjects\\S.-Distribuidos-P3\\CentralizedGroups\\policy");
         System.setSecurityManager(new SecurityManager());
         try {
             LocateRegistry.createRegistry(1099);  

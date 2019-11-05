@@ -48,7 +48,7 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
         GroupServerInterface server = null;
         String serverHostname = args[0];
         try{
-            Registry registry = LocateRegistry.getRegistry(serverHostname, 1099);         
+            Registry registry = LocateRegistry.getRegistry(serverHostname, 1099);
             server = (GroupServerInterface) registry.lookup("GroupServer");
         } catch(Exception e){
             System.err.println("Exception: " + e.toString());
@@ -56,9 +56,10 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
         
         
         Client client = new Client();
-       
-        
-        
+        String memberAlias = null;
+        String groupAlias = null;
+        int res; 
+        LinkedList<String> namelist;
         int option = 0;
         Scanner s = new Scanner(System.in);
         
@@ -91,7 +92,7 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                         
                         System.out.println("Name an alias for the group: ");
                         groupAlias = s.nextLine();
-                        int res = server.createGroup(groupAlias, client.clientAlias, client.hostname);
+                        res = server.createGroup(groupAlias, client.clientAlias, client.hostname);
                         if(res == -1){
                             System.out.println("ERROR al crear el grupo");
                         } else {
@@ -109,6 +110,16 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                             System.out.println("Grupo eliminado");
                         break;
                     case (3):
+                        System.out.println("Introduzca alias del grupo: ");
+                        groupAlias = s.nextLine();
+                        
+                        System.out.println("Introduzca alias para el miembro del grupo: ");
+                        memberAlias = s.nextLine();
+                        
+                        if(server.addMember(groupAlias, memberAlias, client.hostname) != null)
+                            System.out.println("Mimbro creado correctamente");
+                        else
+                            System.out.println("Error al crear el miembro");
                         break;
                     case (4):
                         System.out.println("Nombra el grupo del que quieras eliminar");
@@ -121,6 +132,12 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                             System.out.println("El usuario "+alias+" ha sido expulsado de "+groupAlias);
                         break;
                     case (5):
+                        System.out.println("Introduzca alias del grupo: ");
+                        groupAlias = s.nextLine();
+                        if(server.StopMembers(groupAlias))
+                            System.out.println("Altas y bajas bloqueadas CORRECTAMENTE");
+                        else
+                            System.out.println("ERROR al bloquear las altas/bajas");
                         break;
                     case (6):
                         System.out.println("Nombra el grupo a desbloquear");
@@ -131,6 +148,12 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                             System.out.println(groupAlias + " ha sido desbloqueado");
                         break;
                     case (7):
+                        System.out.println("Introduzca alias del grupo a mostrar: ");
+                        groupAlias = s.nextLine();
+                        namelist = server.ListMembers(groupAlias);
+                        for (String string : namelist) {
+                            System.out.println(string);
+                        }
                         break;
                     case (8):
                         System.out.println("Lista de grupos actuales del servidor:");
