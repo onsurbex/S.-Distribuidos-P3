@@ -42,7 +42,7 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
     }
     
     public static void main(String[] args) throws RemoteException{
-        System.setProperty("java.security.policy", "C:\\Users\\Mariniwa\\Documents\\NetBeansProjects\\S.-Distribuidos-P3\\CentralizedGroups\\ClientPolicy");
+        System.setProperty("java.security.policy", "C:\\Users\\onsur\\Documents\\NetBeansProjects\\S.-Distribuidos-P3\\CentralizedGroups\\ClientPolicy");
         System.setSecurityManager(new SecurityManager());
         
         GroupServerInterface server = null;
