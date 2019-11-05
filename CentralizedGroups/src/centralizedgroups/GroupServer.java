@@ -82,15 +82,19 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
         try {
             for(int i = 0; i<groupList.size(); i++){
                 if(groupList.get(i).groupAlias.equals(groupAlias)){
-                    groupList.remove(i);
-                    this.lock.unlock();
-                    return true;
+                    if(ownerAlias.equals(groupList.get(i).owner.alias)){
+                        groupList.remove(i);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                    
                 }
             }
+            return false;
         } finally {
             this.lock.unlock();
         }
-        return false;
     }
 
     @Override
@@ -118,10 +122,11 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
                     }
                 }
             }
+            return null;
         } finally {
             this.lock.unlock();
         }
-        return null;
+        
     }
 
     @Override
@@ -150,11 +155,11 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
                     return false;
                 }
             }
+           return false;
             //group not found
         } finally {
             this.lock.unlock();
         }
-        return false;
     }
 
     @Override
@@ -175,33 +180,43 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
                     return null;
                 }
             }
+           return null;
         //group not found
         } finally {
             this.lock.unlock();
         }
-        return null;
     }
 
     @Override
     public boolean StopMembers(String groupAlias) {
-        for(ObjectGroup ob: groupList){
-            if(ob.groupAlias.equals(groupAlias)){
-                ob.StopMembers();
-                return true;
+        this.lock.lock();
+        try {
+            for(ObjectGroup ob: groupList){
+                if(ob.groupAlias.equals(groupAlias)){
+                    ob.StopMembers();
+                    return true;
+                }
             }
+          return false;
+        } finally {
+            this.lock.unlock();
         }
-        return false;
     }
 
     @Override
     public boolean AllowMembers(String groupAlias) {
-        for(ObjectGroup ob: groupList){
-            if(ob.groupAlias.equals(groupAlias)){
-                ob.AllowMembers();
-                return true;
+        this.lock.lock();
+        try {
+            for(ObjectGroup ob: groupList){
+                if(ob.groupAlias.equals(groupAlias)){
+                    ob.AllowMembers();
+                    return true;
+                }
             }
+            return false;
+        } finally {
+            this.lock.unlock();
         }
-        return false;
     }
 
     @Override
@@ -217,10 +232,10 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
                     return namelist;
                 }
             }
+            return null;
         } finally {
             this.lock.unlock();
         }
-        return null;
     }
 
     @Override
@@ -231,14 +246,14 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
             for(ObjectGroup ob: groupList){
                 namelist.add(ob.groupAlias);
             }
+            return namelist;
         } finally {
             this.lock.unlock();
         }
-        return namelist;
     }
     
     public static void main(String[] args){
-        System.setProperty("java.security.policy", "C:\\Users\\onsur\\Documents\\NetBeansProjects\\S.-Distribuidos-P3\\CentralizedGroups\\policy");
+        System.setProperty("java.security.policy", "policy");
         System.setSecurityManager(new SecurityManager());
         try {
             LocateRegistry.createRegistry(1099);  
