@@ -42,15 +42,16 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
     }
     
     public static void main(String[] args) throws RemoteException{
-        System.setProperty("java.security.policy", "C:\\Users\\onsur\\Documents\\NetBeansProjects\\S.-Distribuidos-P3\\CentralizedGroups\\ClientPolicy");
+        System.setProperty("java.security.policy", "C:\\Users\\Mariniwa\\Documents\\NetBeansProjects\\S.-Distribuidos-P3\\CentralizedGroups\\ClientPolicy");
         System.setSecurityManager(new SecurityManager());
         
         GroupServerInterface server = null;
-        String serverHostname = args[0];
-        if(serverHostname == null)
+        
+        if(args.length == 0){
             System.out.println("Falta el hostname como argumanto del programa");
             System.exit(0);
-            
+        }
+        String serverHostname = args[0];
         try{
             Registry registry = LocateRegistry.getRegistry(serverHostname, 1099);
             server = (GroupServerInterface) registry.lookup("GroupServer");
@@ -83,6 +84,7 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
             System.out.println("");
             System.out.print("Opcion [1-9]: ");
             option = s.nextInt();
+            s.nextLine();
             if(option <= 0 || option > 9){
                 System.out.println("Opcion no valida: Numero no recogido en las opciones");
                 continue;
@@ -151,9 +153,13 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                     case (7):
                         System.out.println("Introduzca alias del grupo a mostrar: ");
                         groupAlias = s.nextLine();
-                        namelist = server.ListMembers(groupAlias);
-                        for (String string : namelist) {
-                            System.out.println(string);
+                        if(server.findGroup(groupAlias) != -1){
+                            namelist = server.ListMembers(groupAlias);
+                            for (String string : namelist) {
+                                System.out.println(string);
+                            }
+                        } else {
+                            System.out.println("Ese grupo no existe!");
                         }
                         break;
                     case (8):
@@ -164,6 +170,7 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                         }
                         break;
                     case (9):
+                        System.out.println(server);
                         System.out.println("Cerrando cliente");
                         System.exit(0);
                         break;
