@@ -5,10 +5,15 @@
  */
 package centralizedgroups;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -111,4 +116,15 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    public static void main(String[] args){
+        System.setProperty("java.security.policy", "C:\\Users\\onsur\\Documents\\NetBeansProjects\\S.-Distribuidos-P3\\CentralizedGroups");
+        System.setSecurityManager(new SecurityManager());
+        try {
+            LocateRegistry.createRegistry(1099);  
+            GroupServer groupServer = new GroupServer();
+            Naming.rebind("GroupServer", groupServer);
+        } catch (RemoteException | MalformedURLException ex) {
+            Logger.getLogger(GroupServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
