@@ -83,13 +83,12 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                 System.out.println("Opcion no valida: Numero no recogido en las opciones");
                 continue;
             } else {
-                String ownerAlias;
                 String alias;
                 switch(option){
                     
                     case (1):
                         
-                        System.out.println("Name an alias for the group: ");
+                        System.out.println("Introduzca un alias para el grupo: ");
                         groupAlias = s.nextLine();
                         res = server.createGroup(groupAlias, client.clientAlias, client.hostname);
                         if(res == -1){
@@ -101,9 +100,7 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                     case (2):
                         System.out.println("Nombra el grupo que quieras eliminar");
                         groupAlias = s.nextLine();
-                        System.out.println("Nombra el propietario del grupo");
-                        ownerAlias = s.nextLine();
-                        if(!server.removeGroup(groupAlias, ownerAlias))
+                        if(!server.removeGroup(groupAlias, client.clientAlias))
                             System.out.println("ERROR al eliminar grupo");
                         else
                             System.out.println("Grupo eliminado");
