@@ -134,7 +134,7 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                         break;
                     case (8):
                         System.out.println("Lista de grupos actuales del servidor:");
-                        LinkedList<String> namelist = server.ListGroup();
+                        namelist = server.ListGroup();
                         for(int i = 0; i<namelist.size(); i++){
                             System.out.println((i+1)+": "+namelist.get(i));
                         }
