@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author onsur
+ * @author onsur & green
  */
 public class Client extends UnicastRemoteObject implements ClientInterface {
     
@@ -140,6 +140,7 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                         }
                         break;
                     case (9):
+                        System.out.println("Cerrando cliente");
                         System.exit(0);
                         break;
                 }
