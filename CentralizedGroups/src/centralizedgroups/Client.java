@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author onsur
+ * @author onsur & green
  */
 public class Client extends UnicastRemoteObject implements ClientInterface {
     
@@ -59,7 +59,7 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
         String memberAlias = null;
         String groupAlias = null;
         int res; 
-        LinkedList<String> nameList;
+        LinkedList<String> namelist;
         int option = 0;
         Scanner s = new Scanner(System.in);
         
@@ -83,7 +83,11 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                 System.out.println("Opcion no valida: Numero no recogido en las opciones");
                 continue;
             } else {
+                String groupAlias;
+                String ownerAlias;
+                String alias;
                 switch(option){
+                    
                     case (1):
                         
                         System.out.println("Name an alias for the group: ");
@@ -96,6 +100,14 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                         }
                         break;
                     case (2):
+                        System.out.println("Nombra el grupo que quieras eliminar");
+                        groupAlias = s.nextLine();
+                        System.out.println("Nombra el propietario del grupo");
+                        ownerAlias = s.nextLine();
+                        if(!server.removeGroup(groupAlias, ownerAlias))
+                            System.out.println("ERROR al eliminar grupo");
+                        else
+                            System.out.println("Grupo eliminado");
                         break;
                     case (3):
                         System.out.println("Introduzca alias del grupo: ");
@@ -110,6 +122,14 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                             System.out.println("Error al crear el miembro");
                         break;
                     case (4):
+                        System.out.println("Nombra el grupo del que quieras eliminar");
+                        groupAlias = s.nextLine();
+                        System.out.println("Nombra el usuario al que quieras expulsar. No puedes eliminar al owner");
+                        alias = s.nextLine();
+                        if(!server.removeMember(groupAlias, alias))
+                            System.out.println("ERROR: usuario no expulsado");
+                        else
+                            System.out.println("El usuario "+alias+" ha sido expulsado de "+groupAlias);
                         break;
                     case (5):
                         System.out.println("Introduzca alias del grupo: ");
@@ -120,18 +140,30 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                             System.out.println("ERROR al bloquear las altas/bajas");
                         break;
                     case (6):
+                        System.out.println("Nombra el grupo a desbloquear");
+                        groupAlias = s.nextLine();
+                        if(!server.AllowMembers(groupAlias))
+                            System.out.println("ERROR: El grupo no existe");
+                        else
+                            System.out.println(groupAlias + " ha sido desbloqueado");
                         break;
                     case (7):
                         System.out.println("Introduzca alias del grupo a mostrar: ");
                         groupAlias = s.nextLine();
-                        nameList = server.ListMembers(groupAlias);
-                        for (String string : nameList) {
+                        namelist = server.ListMembers(groupAlias);
+                        for (String string : namelist) {
                             System.out.println(string);
                         }
                         break;
                     case (8):
+                        System.out.println("Lista de grupos actuales del servidor:");
+                        namelist = server.ListGroup();
+                        for(int i = 0; i<namelist.size(); i++){
+                            System.out.println((i+1)+": "+namelist.get(i));
+                        }
                         break;
                     case (9):
+                        System.out.println("Cerrando cliente");
                         System.exit(0);
                         break;
                 }
