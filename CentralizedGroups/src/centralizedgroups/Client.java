@@ -83,7 +83,6 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                 System.out.println("Opcion no valida: Numero no recogido en las opciones");
                 continue;
             } else {
-                String groupAlias;
                 String ownerAlias;
                 String alias;
                 switch(option){
