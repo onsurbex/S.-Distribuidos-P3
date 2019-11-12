@@ -33,13 +33,13 @@ public class ObjectGroup {
     
     public GroupMember isMember(String memberAlias){
         this.lock.lock();
-        try{ 
-        for (GroupMember groupMember : memberList) {
-            if(groupMember.alias.equals(memberAlias)) 
-                return groupMember;
-        }
-        return null;
-        }
+            try{ 
+            for (GroupMember groupMember : memberList) {
+                if(groupMember.alias.equals(memberAlias)) 
+                    return groupMember;
+            }
+            return null;
+            }
         finally{
             this.lock.unlock();
         }
@@ -89,6 +89,7 @@ public class ObjectGroup {
         this.lock.lock();
         try {
             this.locked = true;
+            System.out.println("locked = true");
         } finally {
             this.lock.unlock();
         }
@@ -98,6 +99,7 @@ public class ObjectGroup {
         this.lock.lock();
         try {
             this.locked = false;
+            System.out.println("locked = false");
             condition.signalAll();
         } finally {
             this.lock.unlock();
