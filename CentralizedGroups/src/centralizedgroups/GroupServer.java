@@ -116,11 +116,7 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
                     } catch (InterruptedException ex) {
                         Logger.getLogger(GroupServer.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    for(GroupMember gm : ob.memberList){
-                        if(gm.alias.equals(alias)){ 
-                            return gm;
-                        }
-                    }
+                    return ob.isMember(alias);  
                 }
             }
             return null;
@@ -258,7 +254,7 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
     }
     
     public static void main(String[] args){
-        System.setProperty("java.security.policy", "C:\\Users\\Mariniwa\\Documents\\NetBeansProjects\\S.-Distribuidos-P3\\CentralizedGroups\\policy");
+        System.setProperty("java.security.policy", "C:\\Users\\onsur\\Documents\\NetBeansProjects\\S.-Distribuidos-P3\\CentralizedGroups\\politicaDelServidor");
         if(System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
