@@ -29,16 +29,17 @@ public class ObjectGroup {
         owner = new GroupMember(ownerAlias, hostname, counter, groupID);
         memberList = new LinkedList<>();
         memberList.add(owner);
+        this.counter++;
     }
     
     public GroupMember isMember(String memberAlias){
         this.lock.lock();
-            try{ 
+        try{ 
             for (GroupMember groupMember : memberList) {
                 if(groupMember.alias.equals(memberAlias)) 
                     return groupMember;
             }
-            return null;
+                return null;
             }
         finally{
             this.lock.unlock();
@@ -50,13 +51,18 @@ public class ObjectGroup {
         this.lock.lock();
         try{            
             if(this.locked){
-                condition.await();
+                try {
+                    System.out.println("Espera");
+                    condition.await(); 
+                } catch (InterruptedException e){
+                    System.out.println("Exception: " + e.toString());
+                }
             }
             
             if(isMember(memberAlias) == null){                
                 m = new GroupMember(memberAlias,hostname,counter,this.groupID);
+                this.counter++;
                 this.memberList.add(m);
-                counter++;
                 return m;
             } else {
                 return null;
@@ -71,7 +77,11 @@ public class ObjectGroup {
         this.lock.lock();
         try {
             if(this.locked){
-                condition.await();
+                try {
+                    condition.await();
+                } catch(InterruptedException e){
+                        System.out.println("Exception: " + e.toString());    
+                }
             }
 
             if(isMember(memberAlias) != null && !memberAlias.equals(owner.alias)){

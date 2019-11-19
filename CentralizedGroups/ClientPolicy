@@ -4,10 +4,15 @@ permission java.net.SocketPermission "127.0.0.1:*", "accept";
 permission java.net.SocketPermission "127.0.0.2:*", "connect,resolve,listen";
 permission java.net.SocketPermission "127.0.0.2:*", "accept";
 
-permission java.net.SocketPermission "172.19.131.221:*", "connect,resolve,listen";
-permission java.net.SocketPermission "172.19.131.221:*", "accept";
+permission java.net.SocketPermission "172.19.168.4:*", "connect,resolve,listen";
+permission java.net.SocketPermission "172.19.168.4:*", "accept";
 
-permission java.net.SocketPermission "172.19.143.175:*", "connect,resolve,listen";
-permission java.net.SocketPermission "172.19.143.175:*", "accept";
+permission java.net.SocketPermission "172.19.164.17:*", "connect,resolve,listen";
+permission java.net.SocketPermission "172.19.164.17:*", "accept";
 
+permission java.net.SocketPermission "10.0.69.71:*", "connect,resolve,listen";
+permission java.net.SocketPermission "10.0.69.71:*", "accept";
+
+permission java.net.SocketPermission "10.0.69.136:*", "connect,resolve,listen";
+permission java.net.SocketPermission "10.0.69.136:*", "accept";
 };
