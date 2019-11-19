@@ -205,20 +205,22 @@ public class GroupServer extends UnicastRemoteObject implements GroupServerInter
 
     @Override
     public LinkedList<String> ListMembers(String groupAlias) throws RemoteException {
-        
         this.lock.lock();
-        for(ObjectGroup ob: groupList){
-            if(ob.groupAlias.equals(groupAlias)){
-                LinkedList<String> namelist = new LinkedList<>();
-                for(GroupMember gm: ob.memberList){
-                    this.lock.unlock();
-                    namelist.add(gm.alias);
+        try {
+            for(ObjectGroup ob: groupList){
+                if(ob.groupAlias.equals(groupAlias)){
+                    LinkedList<String> namelist = new LinkedList<>();
+                    for(GroupMember gm: ob.memberList){
+                        namelist.add(gm.alias);
+                    }
+                    return namelist;
                 }
-                return namelist;
             }
+            return null;
+        } finally {
+            this.lock.unlock();
         }
-        this.lock.unlock();
-        return null;
+        
         
     }
 
