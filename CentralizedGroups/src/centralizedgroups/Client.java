@@ -149,6 +149,7 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
                     case (6):
                         System.out.println("Nombra el grupo a desbloquear");
                         groupAlias = s.nextLine();
+                        
                         if(!server.AllowMembers(groupAlias))
                             System.out.println("ERROR: El grupo no existe");
                         else
